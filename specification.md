@@ -8,6 +8,8 @@ Author(s): Guangyang Li
 
 CSV Schema is a JSON vocabulary to declare a schema and validate CSV data.
 
+A CSV Schema MUST be an JSON object. 
+
 
 ## 2. Terminology
 
@@ -17,13 +19,9 @@ The terms "CSV" in this document are to be interpreted as defined in [RFC 4180](
 
 The terms "JSON", "object", "array", "number", "string", "boolean", "true", "false", and "null" in this document are to be interpreted as defined in [RFC 7159](https://tools.ietf.org/html/rfc7159).
 
-## 3. Definitions
+## 3. Meta-Schema
 
-A CSV Schema MUST be an JSON object.
-
-field/column
-
-## 4. Meta-Schema
+The schema that describes a CSV Schema is called meta-schema. 
 
 ## 4. Validation Keywords
 
@@ -43,9 +41,9 @@ Each field schema MUST be a JSON object, which has a set of properties defining 
 
 ##### 4.1.1.1 name
 
-A field schema MUST contain a name property. The value SHOULD correspond to the name of column in the CSV data and it SHOULD be case sensitive.
+A field schema MUST contain a name property. The value SHOULD correspond to the name of field in the CSV data and it SHOULD be case sensitive.
 
-There MAY be multiple field schema having same name, only the first one will to be applied to the correspond column and others SHOULD be ignored, unless "exactFields" keyword has boolean value true.
+There MAY be multiple field schema having same name, only the first one will to be applied to the correspond field and others SHOULD be ignored, unless "exactFields" keyword has boolean value true.
 
 ##### 4.1.1.2 type
 
@@ -65,7 +63,7 @@ If this keyword has boolean value false, any value is valid. If it has boolean v
 
 The value of this keyword MUST be a boolean.
 
-If this keyword has boolean value false, any field is valid. If it has boolean value true, a field validates successfully against this keyword only if it the correspond column exists in CSV data.
+If this keyword has boolean value false, any field is valid. If it has boolean value true, a field validates successfully against this keyword only if it the correspond field exists in CSV data.
 
 #### 4.1.2 Keywords for String Type
 
@@ -115,27 +113,49 @@ The default value is `["true", "True", "TRUE", "1"]`.
 
 ##### 4.1.4.1 groupChar
 
-The value of this keyword MUST be a string, which is used to group digits within the number. The string will be ignored when convert value into number type.
+The value of this keyword MUST be a string, which is used to group digits within the number. The string will be ignored when convert value into number or integer type.
 
 ##### 4.1.4.2 maximum
 
-The value of this keyword MUST be a number, which represents the inclusive upper limit of this number type field.
+The value of this keyword MUST be a number, which represents the inclusive upper limit of this field.
 
-A value is valid if it is less than, or equal to, the value of this keyword.
+A number of integer value is valid if it is less than, or equal to, the value of this keyword.
 
 ##### 4.1.4.3 exclusiveMaximum
 
+The value of this keyword MUST be a boolean, which indicates if to the value of "maximum" keyword to exclusive upper limit of this number type field, instead of inclusive upper limit.
+
+If keyword "maximum" is not specified, is keyword will be ignored.
+
+The default valus is `false`.
+
 ##### 4.1.4.4 minimum
 
-The value of this keyword MUST be a number, which represents the inclusive lower limit of this number type field.
+The value of this keyword MUST be a number, which represents the inclusive lower limit of this field.
 
-A value is valid if it is greater than, or equal to, the value of this keyword.
+A number of integer value is valid if it is greater than, or equal to, the value of this keyword.
 
 ##### 4.1.4.5 exclusiveMinimum
 
+The value of this keyword MUST be a boolean, which indicates if to the value of "minimum" keyword to exclusive lower limit of this number type field, instead of inclusive lower limit.
+
+If keyword "minimum" is not specified, is keyword will be ignored.
+
+The default valus is `false`.
+
 ##### 4.1.4.6 multipleOf
 
+The value of this keyword MUST be a number, strictly greater than 0. 
+
+A number of integer value is valid if it is multiple of "multipleOf".
+
 ### 4.2 missingValues 
+
+The value of this keyword MUST be an array of strings, which represents the strings that need to be treated as null value in the whole CSV data.
+
+The implementation SHOULD process the keyword "missingValues" before keyword "fields", therefore the type of elements in "missingValues" SHOULD only be string, instead of value of "type" in "fields".
+
+The default value is `['']`.
 
 ### 4.3 definitions 
 

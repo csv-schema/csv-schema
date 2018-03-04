@@ -5,7 +5,9 @@ CSV Schema is a JSON vocabulary to declare a schema and validate CSV data.
 
 Specification is under hervy development currently.
 
-## How you can contribute
+## How to Contribute
+
+Contact me: mail@guangyangli.com
 
 ## Implementations
 
