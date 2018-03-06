@@ -6,10 +6,7 @@ Author(s): Guangyang Li
 
 ## 1. Introduction
 
-CSV Schema is a JSON vocabulary to declare a schema and validate CSV data.
-
-A CSV Schema MUST be an JSON object.
-
+CSV Schema is a JSON vocabulary to declare a schema and validate CSV data. The schema requires a CSV document satisfying certain criteria, such as data structure, types, format and relations. This specification defines a set of JSON keywords representing these criteria, in order to validate CSV data.
 
 ## 2. Terminology
 
@@ -20,6 +17,8 @@ The terms "CSV" in this document are to be interpreted as defined in [RFC 4180](
 The terms "JSON", "object", "array", "number", "string", "boolean", "true", "false", and "null" in this document are to be interpreted as defined in [RFC 7159](https://tools.ietf.org/html/rfc7159).
 
 ## 3. Overview
+
+A CSV Schema MUST be an JSON object.
 
 CSV Schema defines a set of JSON object properties, which is called schema keywords, for validation purpose.
 
@@ -77,29 +76,33 @@ If this keyword has boolean value false, any field is valid. If it has boolean v
 
 #### 4.1.2.1 format
 
-The value of this keyword MUST be a string, which represents a format of string value. 
+The value of this keyword MUST be a string, which represents a format of string value. The string value MUST be one of four types `{"email", "uri", "uuid", "ipv4", "ipv6", "hostname", "datetime"}`.
 
-If keyword "format" has string value "email", a value validates successfully only if it is a valid email address.
+If keyword "format" has string value "email", a value validates successfully only if it is a valid email address as defined in [RFC 5322 Section 3.4.1](https://tools.ietf.org/html/rfc5322#section-3.4.1).
 
-If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
+If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI as defined in [RFC 1034, section 3.1](https://tools.ietf.org/html/rfc1034#section-3.1).
 
-If keyword "format" has string value "uuid", a value validates successfully only if it is a valid version 4 UUID.
+If keyword "format" has string value "uuid", a value validates successfully only if it is a valid version 4 UUID as defined in [RFC 4122, section 4.4](https://tools.ietf.org/html/rfc4122.html#section-4.4).
 
-If keyword "format" has string value "ipv4", a value validates successfully only if it is a valid IPv4 address.
+If keyword "format" has string value "ipv4", a value validates successfully only if it is a valid IPv4 address as defined in [RFC 2673, section 3.2](https://tools.ietf.org/html/rfc2673#section-3.2).
 
-If keyword "format" has string value "ipv6", a value validates successfully only if it is a valid IPv6 address.
+If keyword "format" has string value "ipv6", a value validates successfully only if it is a valid IPv6 address as defined in [RFC 4291, section 2.2](https://tools.ietf.org/html/rfc4291#section-2.2).
 
-If keyword "format" has string value "hostname", a value validates successfully only if it is a valid hostname.
+If keyword "format" has string value "hostname", a value validates successfully only if it is a valid hostname as defined in [RFC 1034, section 3.1](https://tools.ietf.org/html/rfc1034#section-3.1).
 
-If keyword "format" has string value "datetime", a value validates successfully only if it is a valid datetime in ISO 8601 format of "%Y-%m-%dT%H:%M:%S.%f%z". 
+If keyword "format" has string value "datetime", a value validates successfully only if it is a valid datetime in ISO 8601 format of YYYY-MM-DDThh:mm:ssZ in UTC time.
 
 #### 4.1.2.2 datetimePattern
 
 The value of this keyword MUST be a valid date-time pattern in string. If this keyword is specified, ketword "format" MUST have a string value "datetime".
 
+The pattern MUST follow the syntax of [C strptime](https://www.gnu.org/software/libc/manual/html_node/Low_002dLevel-Time-String-Parsing.html). 
+
 A string value is valid if it matches the date-time pattern.
 
-#### 4.1.2.2 pattern
+The default value is `"%Y-%m-%dT%H:%M:%S.%f%z"`.
+
+#### 4.1.2.3 pattern
 
 The value of this keyword MUST be a string. This string SHOULD be a valid regular expression.
 
@@ -107,13 +110,13 @@ A string value is valid if the regular expression matches the value successfully
 
 If keyword "format" is specified, this keyword SHOULD be ignored.
 
-#### 4.1.2.3 maxLength
+#### 4.1.2.4 maxLength
 
 The value of this keyword MUST be a non-negative integer.
 
 A string value is valid if its length is less than, or equal to, the value of this keyword.
 
-#### 4.1.2.4 minLength
+#### 4.1.2.5 minLength
 
 The value of this keyword MUST be a non-negative integer.
 
