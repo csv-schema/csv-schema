@@ -12,7 +12,7 @@ CSV Schema is a JSON vocabulary to declare a schema and validate CSV data. The s
 
 The key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL in this document are to be interpreted as described in [RFC 2119](https://tools.ietf.org/html/rfc2119).
 
-The terms "CSV" in this document are to be interpreted as defined in [RFC 4180](https://tools.ietf.org/html/rfc4180).
+The terms "CSV" in this document are to be interpreted as defined in [RFC 4180, section 2](https://tools.ietf.org/html/rfc4180#section-2).
 
 The terms "JSON", "object", "array", "number", "string", "boolean", "true", "false", and "null" in this document are to be interpreted as defined in [RFC 7159](https://tools.ietf.org/html/rfc7159).
 
@@ -24,6 +24,8 @@ CSV Schema defines a set of JSON object properties, which is called schema keywo
 
 There are three types of keywords: validator which validates if a value or field satisfies the schema, transformer which pre-processes the value for further validation with other validator keywords, and definer which defines field schema or value for further validation used by other keywords.
 
+Validator keyword includes "fields", "exactFields", "dependencies", "patternFields", "$ref" and "additionalFields", and "type", "format", "pattern", "maxLength", "minLength", "multipleOf", "maximum", "exclusiveMaximum", "minimum", "exclusiveMinimum", "enum", "required", "nullable" under field schema. Transformer keyword includes "missingValues", and "groupChar", "trueValues", "falseValues" under field schema. Definer keyword includes "definitions".
+
 A CSV Schema MAY contain properties which are not schema keywords. Unknown keywords SHOULD be ignored.
 
 ### 3.1 Meta-Schema
@@ -31,6 +33,12 @@ A CSV Schema MAY contain properties which are not schema keywords. Unknown keywo
 The schema that describes a CSV Schema is called meta-schema.
 
 The meta-schema for this version of CSV Schema is [schema.json](schema.json).
+
+### 3.2 Keyword Relations
+
+Implementation SHOULD process validator, transformer and definer keywords in a certain order.
+
+Transformer SHOULD be processed before validator keywords at the same level. For example keyword "missingValues" is processed before "fields" if it exists; "groupChar" is processed before "maximum" under the same field schema if it exists.
 
 ## 4. Validator and Transformer Keywords
 
@@ -78,7 +86,7 @@ If this keyword has boolean value false, any field is valid. If it has boolean v
 
 The value of this keyword MUST be a string, which represents a format of string value. The string value MUST be one of four types `{"email", "uri", "uuid", "ipv4", "ipv6", "hostname", "datetime"}`.
 
-If keyword "format" has string value "email", a value validates successfully only if it is a valid email address as defined in [RFC 5322 Section 3.4.1](https://tools.ietf.org/html/rfc5322#section-3.4.1).
+If keyword "format" has string value "email", a value validates successfully only if it is a valid email address as defined in [RFC 5322, section 3.4.1](https://tools.ietf.org/html/rfc5322#section-3.4.1).
 
 If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI as defined in [RFC 1034, section 3.1](https://tools.ietf.org/html/rfc1034#section-3.1).
 
@@ -126,6 +134,8 @@ A string value is valid if its length is greater than, or equal to, the value of
 
 ##### 4.1.3.1 falseValues
 
+Keyword "falseValues" is a transformer keyword.
+
 The value of this keyword MUST be an array. This array SHOULD have one or more elements. These elements in the array MIGHT be of any value, including null.
 
 If a boolean value is equal to one of the elements in this keyword's array value, it will be converted to boolean value false for further validation.
@@ -133,6 +143,8 @@ If a boolean value is equal to one of the elements in this keyword's array value
 The default value is `["false", "False", "FALSE", "0"]`.
 
 ##### 4.1.3.2 trueValues
+
+Keyword "trueValues" is a transformer keyword.
 
 The value of this keyword MUST be an array. This array SHOULD have one or more elements. These elements in the array MIGHT be of any value, including null.
 
@@ -143,6 +155,8 @@ The default value is `["true", "True", "TRUE", "1"]`.
 #### 4.1.4 Keywords for Number and Integer Type
 
 ##### 4.1.4.1 groupChar
+
+Keyword "groupChar" is a transformer keyword.
 
 The value of this keyword MUST be a string, which is used to group digits within the number. The string will be ignored when convert value into number or integer type.
 
@@ -186,7 +200,7 @@ Keyword "missingValues" is a transformer keyword.
 
 The value of this keyword MUST be an array of strings, which represents the strings that need to be treated as null value in the whole CSV data.
 
-The implementation SHOULD process the keyword "missingValues" before keyword "fields", therefore the type of elements in "missingValues" SHOULD only be string, instead of value of "type" in "fields".
+Implementation SHOULD process the keyword "missingValues" before keyword "fields", therefore the type of elements in "missingValues" SHOULD only be string, instead of value of "type" in "fields".
 
 The default value is `['']`. 
 
