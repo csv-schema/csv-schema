@@ -79,7 +79,7 @@ If this keyword has boolean value false, any field is valid. If it has boolean v
 
 The value of this keyword MUST be a string, which represents a format of string value. 
 
-"email", a value validates successfully only if it is a valid email address.
+If keyword "format" has string value "email", a value validates successfully only if it is a valid email address.
 
 If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
 
@@ -238,37 +238,7 @@ If this keyword has boolean value true, any CSV data is valid. If this keyword h
 
 The default valus is `true`.
 
-## 5. Format
-
-### 5.1 email
-
-If keyword "format" has string value "email", a value validates successfully only if it is a valid email address.
-
-### 5.2 uri
-
-If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
-
-### 5.3 uuid
-
-If keyword "format" has string value "uuid", a value validates successfully only if it is a valid version 4 UUID.
-
-### 5.4 ipv4
-
-If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
-
-### 5.5 ipv6
-
-If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
-
-### 5.6 hostname
-
-If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
-
-### 5.7 datetime
-
-If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
-
-## 6. definitions and $ref
+## 5. definitions and $ref
 
 Keyword "definitions" is a definer keyword which provides a way to re-use field schema with schema authors.
 
