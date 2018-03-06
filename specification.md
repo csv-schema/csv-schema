@@ -8,7 +8,7 @@ Author(s): Guangyang Li
 
 CSV Schema is a JSON vocabulary to declare a schema and validate CSV data.
 
-A CSV Schema MUST be an JSON object. 
+A CSV Schema MUST be an JSON object.
 
 
 ## 2. Terminology
@@ -19,17 +19,21 @@ The terms "CSV" in this document are to be interpreted as defined in [RFC 4180](
 
 The terms "JSON", "object", "array", "number", "string", "boolean", "true", "false", and "null" in this document are to be interpreted as defined in [RFC 7159](https://tools.ietf.org/html/rfc7159).
 
-## 3. Meta-Schema
-
-The schema that describes a CSV Schema is called meta-schema. 
-
-## 4. Validation Keywords
+## 3. Overview
 
 CSV Schema defines a set of JSON object properties, which is called schema keywords, for validation purpose.
 
-A keyword MIGHT be a validator which validates if a value or field satisfies the schema, or a descriptor which pre-process the value for further validation with other keywords.
+There are three types of keywords: validator which validates if a value or field satisfies the schema, transformer which pre-processes the value for further validation with other validator keywords, and definer which defines field schema or value for further validation used by other keywords.
 
-A CSV Schema MAY contain properties which are not schema keywords. Unknown keywords SHOULD be ignored. 
+A CSV Schema MAY contain properties which are not schema keywords. Unknown keywords SHOULD be ignored.
+
+### 3.1 Meta-Schema
+
+The schema that describes a CSV Schema is called meta-schema.
+
+The meta-schema for this version of CSV Schema is [schema.json](schema.json).
+
+## 4. Validator and Transformer Keywords
 
 ### 4.1 fields
 
@@ -46,6 +50,10 @@ A field schema MUST contain a name property. The value SHOULD correspond to the 
 There MAY be multiple field schema having same name, only the first one will to be applied to the correspond field and others SHOULD be ignored, unless "exactFields" keyword has boolean value true.
 
 ##### 4.1.1.2 type
+
+The value of this keyword MUST be a string. The string value MUST be one of four types `{"string", "number", "integer", "boolean"}`.
+
+The default value is `"string"`. 
 
 ##### 4.1.1.3 enum
 
@@ -69,7 +77,27 @@ If this keyword has boolean value false, any field is valid. If it has boolean v
 
 #### 4.1.2.1 format
 
-See [5. Format](5. Format) for all possible values of format.
+The value of this keyword MUST be a string, which represents a format of string value. 
+
+"email", a value validates successfully only if it is a valid email address.
+
+If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
+
+If keyword "format" has string value "uuid", a value validates successfully only if it is a valid version 4 UUID.
+
+If keyword "format" has string value "ipv4", a value validates successfully only if it is a valid IPv4 address.
+
+If keyword "format" has string value "ipv6", a value validates successfully only if it is a valid IPv6 address.
+
+If keyword "format" has string value "hostname", a value validates successfully only if it is a valid hostname.
+
+If keyword "format" has string value "datetime", a value validates successfully only if it is a valid datetime in ISO 8601 format of "%Y-%m-%dT%H:%M:%S.%f%z". 
+
+#### 4.1.2.2 datetimePattern
+
+The value of this keyword MUST be a valid date-time pattern in string. If this keyword is specified, ketword "format" MUST have a string value "datetime".
+
+A string value is valid if it matches the date-time pattern.
 
 #### 4.1.2.2 pattern
 
@@ -145,30 +173,128 @@ The default valus is `false`.
 
 ##### 4.1.4.6 multipleOf
 
-The value of this keyword MUST be a number, strictly greater than 0. 
+The value of this keyword MUST be a number, strictly greater than 0.
 
 A number of integer value is valid if it is multiple of "multipleOf".
 
-### 4.2 missingValues 
+### 4.2 missingValues
+
+Keyword "missingValues" is a transformer keyword.
 
 The value of this keyword MUST be an array of strings, which represents the strings that need to be treated as null value in the whole CSV data.
 
 The implementation SHOULD process the keyword "missingValues" before keyword "fields", therefore the type of elements in "missingValues" SHOULD only be string, instead of value of "type" in "fields".
 
-The default value is `['']`.
+The default value is `['']`. 
 
-### 4.3 definitions 
+### 4.3 exactFields
 
-### 4.4 exactFields 
+The value of this keyword MUST be a boolean, which indicates if every field schema defined under "fields" matches correspond field in CSV data by order exactly.
 
-### 4.5 dependencies 
+If this keyword has boolean value false, any CSV data is valid. If this keyword has boolean value true, the CSV fields validate successfully only if every field name defined in keyword "name" under "fields" matches correspond field in CSV data by order exactly.
 
-### 4.6 patternFields 
+The default valus is `false`.
 
-### 4.7 additionalFields 
+### 4.4 dependencies
+
+The value of this keyword MUST be a JSON object.
+
+The dependencies key is a field name. 
+
+The dependencies value MUST be an array. Each element in the array MUST be a string, and MUST be unique.
+
+If the dependencies key exists in CSV data field names, each element in the dependencies value must exists in CSV data field names.
+
+### 4.5 patternFields
+
+Keyword "patternFields" provides a way to match multiple fields in CSV data with single field schema.
+
+The value of this keyword MUST be a JSON object. For each item of the object, the item key MUST be a valid regex for matching field names, the item value MUST be a valid field schema.
+
+If a field is defined in keyword "fields" and is matches in any regex in keyword "patternFields", the field schem in keyword "patternFields" will be ignored for that field.
+
+If the regex is not matching any field, the corresponding field schema does not affect the validation result. 
+
+Example schema:
+
+```
+{
+    "patternFields": {
+        ".*_name$": {
+            "type": "string",
+            "maxLength": 30
+        }
+    }
+}
+```
+
+In this example, it defines a string type field schema with regex ".*_name$". This field schema will be applied to all field names ending with "_name".
+
+### 4.6 additionalFields
+
+The value of this keyword MUST be a boolean, which indicates whether allowing any field in CSV data that is not defined in this schema.
+
+If this keyword has boolean value true, any CSV data is valid. If this keyword has boolean value false, the CSV fields validate successfully only if everyone of them is defined in keyword "fields", or can be matched through keyword "patternFields".
+
+The default valus is `true`.
 
 ## 5. Format
 
-## 6. Keyword Independence
+### 5.1 email
 
-## 
+If keyword "format" has string value "email", a value validates successfully only if it is a valid email address.
+
+### 5.2 uri
+
+If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
+
+### 5.3 uuid
+
+If keyword "format" has string value "uuid", a value validates successfully only if it is a valid version 4 UUID.
+
+### 5.4 ipv4
+
+If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
+
+### 5.5 ipv6
+
+If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
+
+### 5.6 hostname
+
+If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
+
+### 5.7 datetime
+
+If keyword "format" has string value "uri", a value validates successfully only if it is a valid URI.
+
+## 6. definitions and $ref
+
+Keyword "definitions" is a definer keyword which provides a way to re-use field schema with schema authors.
+
+The value of this keyword MUST be a JSON object. For each item of the object, the item key represents the author name, the item value MUST be a valid field schema.
+
+To refer the field schema in "definitions", add keyword "$ref" with corresponding author name in the field schema referencing the defined field schema. All other keywords excluding "$ref" and "name" in that field schema are ignored.
+
+Keyword "$ref" can be used under keyword "fields" and keyword "patternFields". It SHOULD NOT be used in keyword "definitions" and nested definitions SHOULD NOT be allowed.
+
+Example schema:
+
+```
+{
+    "fields": [
+        {
+            "name": "column",
+            "$ref": "email_field"
+        }
+    ],
+    "definitions": {
+        "email_field": {
+            "type": "string",
+            "format": "email"
+        }
+    }
+}
+```
+
+In this example, it defines a string type field schema with author name "email_field", which is refercened by field schema "column".

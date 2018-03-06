@@ -9,6 +9,10 @@
       "minItems": 1,
       "uniqueItems": true
     },
+    "positive-number": {
+      "type": "integer",
+      "minimum": 0
+    },
     "fields-name": {
       "description": "Name of the field.",
       "type": "string"
@@ -47,10 +51,13 @@
       "description": "The pattern keyword for string field.",
       "type": "string"
     },
+    "fields-type-string-datetimePattern": {
+      "description": "The datetimePattern keyword for string field.",
+      "type": "string"
+    },
     "fields-type-string-minLength": {
       "description": "The minLength keyword for string field.",
-      "type": "integer",
-      "minimum": 0
+      "$ref": "#/definitions/positive-number"
     },
     "fields-type-string-maxLength": {
       "description": "The minLength keyword for string field.",
@@ -60,7 +67,7 @@
       "description": "The enum keyword for string field fields",
       "allOf": [
         {
-          "$ref": "enum-type"
+          "$ref": "#/definitions/enum-type"
         },
         {
           "items": {
@@ -110,7 +117,7 @@
       "description": "The enum keyword for boolean type fields",
       "allOf": [
         {
-          "$ref": "enum-type"
+          "$ref": "#/definitions/enum-type"
         },
         {
           "items": {
@@ -145,7 +152,7 @@
     },
     "fields-type-number-integer-multipleOf": {
       "description": "The multipleOf keywordfor number and integer type.",
-      "type": "integer"
+      "$ref": "#/definitions/positive-number"
     },
     "fields-type-number-integer-groupChar": {
       "description": "The groupChar keywordfor number and integer type.",
@@ -155,7 +162,7 @@
       "description": "The enum keywordfor number type.",
       "allOf": [
         {
-          "$ref": "enum-type"
+          "$ref": "#/definitions/enum-type"
         },
         {
           "items": {
@@ -176,7 +183,7 @@
       "description": "The enum keywordfor integer type.",
       "allOf": [
         {
-          "$ref": "enum-type"
+          "$ref": "#/definitions/enum-type"
         },
         {
           "items": {
@@ -198,6 +205,9 @@
         },
         "pattern": {
           "$ref": "#/definitions/fields-type-string-pattern"
+        },
+        "datetimePattern": {
+          "$ref": "#/definitions/fields-type-string-datetimePattern"
         },
         "minLength": {
           "$ref": "#/definitions/fields-type-string-minLength"
@@ -369,6 +379,9 @@
               },
               "pattern": {
                 "$ref": "#/definitions/fields-type-string-pattern"
+              },
+              "datetimePattern": {
+                "$ref": "#/definitions/fields-type-string-datetimePattern"
               },
               "minLength": {
                 "$ref": "#/definitions/fields-type-string-minLength"
