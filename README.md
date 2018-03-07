@@ -1,11 +1,11 @@
 # CSV Schema
 CSV Schema is a JSON vocabulary to declare a schema and validate CSV data.
 
-[Specification](specification.md)
+* [Specification](specification.md)
 
-Examples(WIP)
+* Examples(WIP)
 
-## Quick Example
+## Quick Start
 
 For several use cases, such as importing CSV data into databases, grouping by column for analysis, or performing data visualization, we would like to validate the data and make sure it meets all our requirements before any further manipulation.
 
