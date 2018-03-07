@@ -15,7 +15,7 @@ Let's say we have following CSV document:
 
 ```
 name,e-mail,zipcode,donation
-Ann,ann@mail.com,06001,"1,000"
+Ann,ann@mail.com,"06001","1,000"
 Ben,ben@home.com,85001,100
 ```
 
