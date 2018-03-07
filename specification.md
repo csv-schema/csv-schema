@@ -1,8 +1,50 @@
 # CSV Schema
 
-Version: 0.0.2 (2018-03-08)
+**Version:** 0.0.2 (2018-03-08)
 
-Author(s): Guangyang Li
+**Author(s):** Guangyang Li
+
+**License:** [MIT](LICENSE)
+
+**Status:** Work in Progress
+
+## Table of Contents
+
+  * [1. Introduction](#1-introduction)
+  * [2. Terminology](#2-terminology)
+  * [3. Overview](#3-overview)
+    + [3.1 Meta-Schema](#31-meta-schema)
+    + [3.2 Keyword Relations](#32-keyword-relations)
+  * [4. Validator and Transformer Keywords](#4-validator-and-transformer-keywords)
+    + [4.1 fields](#41-fields)
+      - [4.1.1 Keywords for Any Type](#411-keywords-for-any-type)
+        * [4.1.1.1 name](#4111-name)
+        * [4.1.1.2 type](#4112-type)
+        * [4.1.1.3 enum](#4113-enum)
+        * [4.1.1.4 nullable](#4114-nullable)
+        * [4.1.1.5 required](#4115-required)
+      - [4.1.2 Keywords for String Type](#412-keywords-for-string-type)
+      - [4.1.2.1 format](#4121-format)
+      - [4.1.2.2 datetimePattern](#4122-datetimepattern)
+      - [4.1.2.3 pattern](#4123-pattern)
+      - [4.1.2.4 maxLength](#4124-maxlength)
+      - [4.1.2.5 minLength](#4125-minlength)
+      - [4.1.3 Keywords for Boolean Type](#413-keywords-for-boolean-type)
+        * [4.1.3.1 falseValues](#4131-falsevalues)
+        * [4.1.3.2 trueValues](#4132-truevalues)
+      - [4.1.4 Keywords for Number and Integer Type](#414-keywords-for-number-and-integer-type)
+        * [4.1.4.1 groupChar](#4141-groupchar)
+        * [4.1.4.2 maximum](#4142-maximum)
+        * [4.1.4.3 exclusiveMaximum](#4143-exclusivemaximum)
+        * [4.1.4.4 minimum](#4144-minimum)
+        * [4.1.4.5 exclusiveMinimum](#4145-exclusiveminimum)
+        * [4.1.4.6 multipleOf](#4146-multipleof)
+    + [4.2 missingValues](#42-missingvalues)
+    + [4.3 exactFields](#43-exactfields)
+    + [4.4 dependencies](#44-dependencies)
+    + [4.5 patternFields](#45-patternfields)
+    + [4.6 additionalFields](#46-additionalfields)
+  * [5. definitions and $ref](#5-definitions-and--ref)
 
 ## 1. Introduction
 
@@ -134,8 +176,6 @@ A string value is valid if its length is greater than, or equal to, the value of
 
 ##### 4.1.3.1 falseValues
 
-Keyword "falseValues" is a transformer keyword.
-
 The value of this keyword MUST be an array. This array SHOULD have one or more elements. These elements in the array MIGHT be of any value, including null.
 
 If a boolean value is equal to one of the elements in this keyword's array value, it will be converted to boolean value false for further validation.
@@ -143,8 +183,6 @@ If a boolean value is equal to one of the elements in this keyword's array value
 The default value is `["false", "False", "FALSE", "0"]`.
 
 ##### 4.1.3.2 trueValues
-
-Keyword "trueValues" is a transformer keyword.
 
 The value of this keyword MUST be an array. This array SHOULD have one or more elements. These elements in the array MIGHT be of any value, including null.
 
@@ -195,8 +233,6 @@ The value of this keyword MUST be a number, strictly greater than 0.
 A number of integer value is valid if it is multiple of "multipleOf".
 
 ### 4.2 missingValues
-
-Keyword "missingValues" is a transformer keyword.
 
 The value of this keyword MUST be an array of strings, which represents the strings that need to be treated as null value in the whole CSV data.
 
