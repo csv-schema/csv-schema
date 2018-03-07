@@ -1,11 +1,8 @@
 # CSV Schema
 
-**Version:** 0.0.2 (2018-03-08)
-
-**Author(s):** Guangyang Li
-
-**License:** [MIT](LICENSE)
-
+**Version:** 0.0.2 (2018-03-08)  
+**Author(s):** Guangyang Li  
+**License:** [Apache License 2](https://www.apache.org/licenses/LICENSE-2.0)  
 **Status:** Work in Progress
 
 ## Table of Contents

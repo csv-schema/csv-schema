@@ -7,7 +7,7 @@ Examples(WIP)
 
 ## Quick Example
 
-For a lot of use cases, such as importing CSV into databases, grouping by column for further analysis, or performing data visualization, we would like to validate the data and make sure it meets all our requirements.
+For several use cases, such as importing CSV data into databases, grouping by column for analysis, or performing data visualization, we would like to validate the data and make sure it meets all our requirements before digging too deep.
 
 CVS Schema provides a way to define a schema and run validation based on it.
 
@@ -49,4 +49,4 @@ We can define a schema to validate it. For example, the following schema validat
 
 ## License
 
-CSV Schema is under MIT license, see LICENSE file for the details.
+CSV Schema is licensed under Apache License 2 license.
