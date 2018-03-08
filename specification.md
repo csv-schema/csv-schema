@@ -41,7 +41,7 @@
   + [4.4 dependencies](#44-dependencies)
   + [4.5 patternFields](#45-patternfields)
   + [4.6 additionalFields](#46-additionalfields)
-* [5. definitions and $ref](#5-definitions-and--ref)
+* [5. definitions and $ref](#5-definitions-and-ref)
 
 ## 1. Introduction
 
@@ -63,7 +63,11 @@ CSV Schema defines a set of JSON object properties, which is called schema keywo
 
 There are three types of keywords: validator which validates if a value or field satisfies the schema, transformer which pre-processes the value for further validation with other validator keywords, and definer which defines field schema or value for further validation used by other keywords.
 
-Validator keyword includes "fields", "exactFields", "dependencies", "patternFields", "$ref" and "additionalFields", and "type", "format", "pattern", "maxLength", "minLength", "multipleOf", "maximum", "exclusiveMaximum", "minimum", "exclusiveMinimum", "enum", "required", "nullable" under field schema. Transformer keyword includes "missingValues", and "groupChar", "trueValues", "falseValues" under field schema. Definer keyword includes "definitions".
+Validator keyword includes "fields", "exactFields", "dependencies", "patternFields", "$ref" and "additionalFields", and "type", "format", "pattern", "maxLength", "minLength", "multipleOf", "maximum", "exclusiveMaximum", "minimum", "exclusiveMinimum", "enum", "required", "nullable" under field schema. 
+
+Transformer keyword includes "missingValues", and "groupChar", "trueValues", "falseValues" under field schema. 
+
+Definer keyword includes "definitions".
 
 A CSV Schema MAY contain properties which are not schema keywords. Unknown keywords SHOULD be ignored.
 
@@ -261,9 +265,11 @@ Keyword "patternFields" provides a way to match multiple fields in CSV data with
 
 The value of this keyword MUST be a JSON object. For each item of the object, the item key MUST be a valid regex for matching field names, the item value MUST be a valid field schema.
 
-If a field is defined in keyword "fields" and is matches in any regex in keyword "patternFields", the field schem in keyword "patternFields" will be ignored for that field.
+The keyword "name" will be ignored in the field schema if it exists.
 
-If the regex is not matching any field, the corresponding field schema does not affect the validation result. 
+If a field is defined in keyword "fields" and is matched with any regex in keyword "patternFields", the field schema in keyword "patternFields" will be ignored for that field.
+
+If the regex is not matching any field, the corresponding field schema will not affect the validation result. 
 
 Example schema:
 
@@ -288,11 +294,13 @@ If this keyword has boolean value true, any CSV data is valid. If this keyword h
 
 The default valus is `true`.
 
-## 5. definitions and $ref
+## 5. definitions and \$ref
 
 Keyword "definitions" is a definer keyword which provides a way to re-use field schema with schema authors.
 
 The value of this keyword MUST be a JSON object. For each item of the object, the item key represents the author name, the item value MUST be a valid field schema.
+
+The keyword "name" will be ignored in the field schema if it exists.
 
 To refer the field schema in "definitions", add keyword "$ref" with corresponding author name in the field schema referencing the defined field schema. All other keywords excluding "$ref" and "name" in that field schema are ignored.
 
