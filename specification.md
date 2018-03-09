@@ -42,6 +42,9 @@
   + [4.5 patternFields](#45-patternfields)
   + [4.6 additionalFields](#46-additionalfields)
 * [5. definitions and $ref](#5-definitions-and-ref)
+* [6. Annotator Keywords](#6-annotator-keywords)
+  + [6.1 title and description](#61-title-and-description)
+  + [6.2 examples](#62-examples)
 
 ## 1. Introduction
 
@@ -61,13 +64,13 @@ A CSV Schema MUST be an JSON object.
 
 CSV Schema defines a set of JSON object properties, which is called schema keywords, for validation purpose.
 
-There are three types of keywords: validator which validates if a value or field satisfies the schema, transformer which pre-processes the value for further validation with other validator keywords, and definer which defines field schema or value for further validation used by other keywords.
+There are three types of keywords: validator which validates if a value or field satisfies the schema, transformer which pre-processes the value or schema for further validation with other validator keywords, and annotator which performs annotation about CSV data.
 
-Validator keyword includes "fields", "exactFields", "dependencies", "patternFields", "$ref" and "additionalFields", and "type", "format", "pattern", "maxLength", "minLength", "multipleOf", "maximum", "exclusiveMaximum", "minimum", "exclusiveMinimum", "enum", "required", "nullable" under field schema. 
+Validator keyword includes "fields", "exactFields", "dependencies", "patternFields" and "additionalFields", and "type", "format", "pattern", "maxLength", "minLength", "multipleOf", "maximum", "exclusiveMaximum", "minimum", "exclusiveMinimum", "enum", "required", "nullable" under field schema. 
 
-Transformer keyword includes "missingValues", and "groupChar", "trueValues", "falseValues" under field schema. 
+Transformer keyword includes "missingValues", "definitions", and "groupChar", "trueValues", "falseValues", "$ref" under field schema. 
 
-Definer keyword includes "definitions".
+Annotator keyword includes "title", "description" and "examples".
 
 A CSV Schema MAY contain properties which are not schema keywords. Unknown keywords SHOULD be ignored.
 
@@ -79,7 +82,7 @@ The meta-schema for this version of CSV Schema is [schema.json](schema.json).
 
 ### 3.2 Keyword Relations
 
-Implementation SHOULD process validator, transformer and definer keywords in a certain order.
+Implementation SHOULD process validator, transformer and descriptor keywords in a certain order.
 
 Transformer SHOULD be processed before validator keywords at the same level. For example keyword "missingValues" is processed before "fields" if it exists; "groupChar" is processed before "maximum" under the same field schema if it exists.
 
@@ -296,7 +299,7 @@ The default valus is `true`.
 
 ## 5. definitions and \$ref
 
-Keyword "definitions" is a definer keyword which provides a way to re-use field schema with schema authors.
+Keyword "definitions" is a descriptor keyword which provides a way to re-use field schema with schema authors.
 
 The value of this keyword MUST be a JSON object. For each item of the object, the item key represents the author name, the item value MUST be a valid field schema.
 
@@ -326,3 +329,17 @@ Example schema:
 ```
 
 In this example, it defines a string type field schema with author name "email_field", which is refercened by field schema "column".
+
+## 6. Annotator Keywords
+
+### 6.1 title and description
+
+Keyword "title" and "description" can be added to both of root schema or field schema. The value of these two keywords MUST be a string.
+
+These two keywords provide human readable information about the CSV document or field. "title" is usually a short text or label. "description" usually contains explanation about the document or field in detail.
+
+### 6.2 examples
+
+Keyword "examples" is a keyword under field schema, which provides one or more than one possible values of the field.
+
+The value of keyword "examples" MUST be an array.
