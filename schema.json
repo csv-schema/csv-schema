@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "CSV Schema Meta Schema",
+  "title": "CSV Schema",
   "description": "This is meta-schema of CSV Schema.",
   "type": "object",
   "definitions": {
@@ -719,6 +719,19 @@
         }
       },
       "additionalProperties": false
+    },
+    "hasHeader": {
+      "description": "Whether the CSV file has header as first line.",
+      "type": "boolean",
+      "default": true
+    },
+    "header": {
+      "description": "The CSV header line.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
     },
     "dependencies": {
       "description": "Define dependencies among fields.",

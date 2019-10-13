@@ -1,6 +1,6 @@
-# CSV Schema
+# CSV Schema (Draft 0)
 
-**Version:** 0.0.2 (2018-03-08)  
+**Version:** 0.1.0 (2019-10-12)  
 **Author(s):** Guangyang Li  
 **License:** [Apache License 2](https://www.apache.org/licenses/LICENSE-2.0)  
 **Status:** Work in Progress
@@ -13,29 +13,31 @@
   + [3.1 Meta-Schema](#31-meta-schema)
   + [3.2 Keyword Relations](#32-keyword-relations)
 * [4. Validator and Transformer Keywords](#4-validator-and-transformer-keywords)
-  + [4.1 fields](#41-fields)
-    - [4.1.1 Keywords for Any Type](#411-keywords-for-any-type)
-      * [4.1.1.1 name](#4111-name)
-      * [4.1.1.2 type](#4112-type)
-      * [4.1.1.3 enum](#4113-enum)
-      * [4.1.1.4 nullable](#4114-nullable)
-      * [4.1.1.5 required](#4115-required)
-    - [4.1.2 Keywords for String Type](#412-keywords-for-string-type)
-      * [4.1.2.1 format](#4121-format)
-      * [4.1.2.2 datetimePattern](#4122-datetimepattern)
-      * [4.1.2.3 pattern](#4123-pattern)
-      * [4.1.2.4 maxLength](#4124-maxlength)
-      * [4.1.2.5 minLength](#4125-minlength)
-    - [4.1.3 Keywords for Boolean Type](#413-keywords-for-boolean-type)
-      * [4.1.3.1 falseValues](#4131-falsevalues)
-      * [4.1.3.2 trueValues](#4132-truevalues)
-    - [4.1.4 Keywords for Number and Integer Type](#414-keywords-for-number-and-integer-type)
-      * [4.1.4.1 groupChar](#4141-groupchar)
-      * [4.1.4.2 maximum](#4142-maximum)
-      * [4.1.4.3 exclusiveMaximum](#4143-exclusivemaximum)
-      * [4.1.4.4 minimum](#4144-minimum)
-      * [4.1.4.5 exclusiveMinimum](#4145-exclusiveminimum)
-      * [4.1.4.6 multipleOf](#4146-multipleof)
+  + [4.1 hasHeader](#41-hasheader)
+  + [4.2 Header](#42-header)
+  + [4.3 fields](#43-fields)
+    - [4.3.1 Keywords for Any Type](#431-keywords-for-any-type)
+      * [4.3.1.1 name](#4311-name)
+      * [4.3.1.2 type](#4312-type)
+      * [4.3.1.3 enum](#4313-enum)
+      * [4.3.1.4 nullable](#4314-nullable)
+      * [4.3.1.5 required](#4315-required)
+    - [4.3.2 Keywords for String Type](#432-keywords-for-string-type)
+      * [4.3.2.1 format](#4321-format)
+      * [4.3.2.2 datetimePattern](#4322-datetimepattern)
+      * [4.3.2.3 pattern](#4323-pattern)
+      * [4.3.2.4 maxLength](#4324-maxlength)
+      * [4.3.2.5 minLength](#4325-minlength)
+    - [4.3.3 Keywords for Boolean Type](#433-keywords-for-boolean-type)
+      * [4.3.3.1 falseValues](#4331-falsevalues)
+      * [4.3.3.2 trueValues](#4332-truevalues)
+    - [4.3.4 Keywords for Number and Integer Type](#434-keywords-for-number-and-integer-type)
+      * [4.3.4.1 groupChar](#4343-groupchar)
+      * [4.3.4.2 maximum](#4342-maximum)
+      * [4.3.4.3 exclusiveMaximum](#4343-exclusivemaximum)
+      * [4.3.4.4 minimum](#4344-minimum)
+      * [4.3.4.5 exclusiveMinimum](#4345-exclusiveminimum)
+      * [4.3.4.6 multipleOf](#4346-multipleof)
   + [4.2 missingValues](#42-missingvalues)
   + [4.3 exactFields](#43-exactfields)
   + [4.4 dependencies](#44-dependencies)
@@ -88,47 +90,57 @@ Transformer SHOULD be processed before validator keywords at the same level. For
 
 ## 4. Validator and Transformer Keywords
 
-### 4.1 fields
+### 4.1 hasHeader
+
+As defined in [RFC 4180, section 2](https://tools.ietf.org/html/rfc4180#section-2), CSV file has an optional header line appearing as the first line of the file. Keyword "hasHeader" describes whether the first line is header line.
+
+The value of "hasHeader" MUST be a boolean. The default value is true.
+
+### 4.2 header
+
+Keyword "header" describes the names corresponding to the fields in the file. It SHOULD have the same length as the field length in normal record lines. When "hasHeader" is false, "header" is required. When "hasHeader" is true, it validates if the value is the same to the field name appearing at the first line of the file. The value SHOULD correspond to the name of field in the CSV file with order and it SHOULD be case sensitive.
+
+### 4.3 fields
 
 The value of "fields" MUST be an array. This array SHOULD have one or more than one field schema.
 
 Each field schema MUST be a JSON object, which has a set of properties defining a field.
 
-#### 4.1.1 Keywords for Any Type
+#### 4.3.1 Keywords for Any Type
 
-##### 4.1.1.1 name
+##### 4.3.1.1 name
 
-A field schema MUST contain a name property. The value SHOULD correspond to the name of field in the CSV data and it SHOULD be case sensitive.
+A field schema MUST contain a name property. The value SHOULD correspond to the name of field in the CSV file with order and it SHOULD be case sensitive.
 
 There MAY be multiple field schema having same name, only the first one will to be applied to the correspond field and others SHOULD be ignored, unless "exactFields" keyword has boolean value true.
 
-##### 4.1.1.2 type
+##### 4.3.1.2 type
 
 The value of this keyword MUST be a string. The string value MUST be one of four types `{"string", "number", "integer", "boolean"}`.
 
 The default value is `"string"`. 
 
-##### 4.1.1.3 enum
+##### 4.3.1.3 enum
 
 The value of this keyword MUST be an array. This array SHOULD have one or more elements. These elements in the array MIGHT be of null or any value in the type defined in "type" keyword in this field schema. These elements SHOULD be unique.
 
 A value is valid if this value is equal to one of the elements in this keyword's array value.
 
-##### 4.1.1.4 nullable
+##### 4.3.1.4 nullable
 
 The value of this keyword MUST be a boolean, which indicates if null is allowed in this field.
 
 If this keyword has boolean value false, any value is valid. If it has boolean value true, a value validates successfully only if it is not null.
 
-##### 4.1.1.5 required
+##### 4.3.1.5 required
 
 The value of this keyword MUST be a boolean.
 
 If this keyword has boolean value false, any field is valid. If it has boolean value true, a field validates successfully against this keyword only if it the correspond field exists in CSV data.
 
-#### 4.1.2 Keywords for String Type
+#### 4.3.2 Keywords for String Type
 
-#### 4.1.2.1 format
+#### 4.3.2.1 format
 
 The value of this keyword MUST be a string, which represents a format of string value. The string value MUST be one of four types `{"email", "uri", "uuid", "ipv4", "ipv6", "hostname", "datetime"}`.
 
@@ -146,7 +158,7 @@ If keyword "format" has string value "hostname", a value validates successfully 
 
 If keyword "format" has string value "datetime", a value validates successfully only if it is a valid datetime in ISO 8601 format of YYYY-MM-DDThh:mm:ssZ in UTC time.
 
-#### 4.1.2.2 datetimePattern
+#### 4.3.2.2 datetimePattern
 
 The value of this keyword MUST be a valid date-time pattern in string. If this keyword is specified, ketword "format" MUST have a string value "datetime".
 
@@ -156,7 +168,7 @@ A string value is valid if it matches the date-time pattern.
 
 The default value is `"%Y-%m-%dT%H:%M:%S.%f%z"`.
 
-#### 4.1.2.3 pattern
+#### 4.3.2.3 pattern
 
 The value of this keyword MUST be a string. This string SHOULD be a valid regular expression.
 
@@ -164,21 +176,21 @@ A string value is valid if the regular expression matches the value successfully
 
 If keyword "format" is specified, this keyword SHOULD be ignored.
 
-#### 4.1.2.4 maxLength
+#### 4.3.2.4 maxLength
 
 The value of this keyword MUST be a non-negative integer.
 
 A string value is valid if its length is less than, or equal to, the value of this keyword.
 
-#### 4.1.2.5 minLength
+#### 4.3.2.5 minLength
 
 The value of this keyword MUST be a non-negative integer.
 
 A string value is valid if its length is greater than, or equal to, the value of this keyword.
 
-#### 4.1.3 Keywords for Boolean Type
+#### 4.3.3 Keywords for Boolean Type
 
-##### 4.1.3.1 falseValues
+##### 4.3.3.1 falseValues
 
 The value of this keyword MUST be an array. This array SHOULD have one or more elements. These elements in the array MIGHT be of any value, including null.
 
@@ -186,7 +198,7 @@ If a boolean value is equal to one of the elements in this keyword's array value
 
 The default value is `["false", "False", "FALSE", "0"]`.
 
-##### 4.1.3.2 trueValues
+##### 4.3.3.2 trueValues
 
 The value of this keyword MUST be an array. This array SHOULD have one or more elements. These elements in the array MIGHT be of any value, including null.
 
@@ -194,21 +206,21 @@ If a boolean value is equal to one of the elements in this keyword's array value
 
 The default value is `["true", "True", "TRUE", "1"]`.
 
-#### 4.1.4 Keywords for Number and Integer Type
+#### 4.3.4 Keywords for Number and Integer Type
 
-##### 4.1.4.1 groupChar
+##### 4.3.4.1 groupChar
 
 Keyword "groupChar" is a transformer keyword.
 
 The value of this keyword MUST be a string, which is used to group digits within the number. The string will be ignored when convert value into number or integer type.
 
-##### 4.1.4.2 maximum
+##### 4.3.4.2 maximum
 
 The value of this keyword MUST be a number, which represents the inclusive upper limit of this field.
 
 A number of integer value is valid if it is less than, or equal to, the value of this keyword.
 
-##### 4.1.4.3 exclusiveMaximum
+##### 4.3.4.3 exclusiveMaximum
 
 The value of this keyword MUST be a boolean, which indicates if to the value of "maximum" keyword to exclusive upper limit of this number type field, instead of inclusive upper limit.
 
@@ -216,13 +228,13 @@ If keyword "maximum" is not specified, is keyword will be ignored.
 
 The default valus is `false`.
 
-##### 4.1.4.4 minimum
+##### 4.3.4.4 minimum
 
 The value of this keyword MUST be a number, which represents the inclusive lower limit of this field.
 
 A number of integer value is valid if it is greater than, or equal to, the value of this keyword.
 
-##### 4.1.4.5 exclusiveMinimum
+##### 4.3.4.5 exclusiveMinimum
 
 The value of this keyword MUST be a boolean, which indicates if to the value of "minimum" keyword to exclusive lower limit of this number type field, instead of inclusive lower limit.
 
@@ -230,7 +242,7 @@ If keyword "minimum" is not specified, is keyword will be ignored.
 
 The default valus is `false`.
 
-##### 4.1.4.6 multipleOf
+##### 4.3.4.6 multipleOf
 
 The value of this keyword MUST be a number, strictly greater than 0.
 
