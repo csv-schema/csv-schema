@@ -14,7 +14,7 @@
   + [3.2 Keyword Relations](#32-keyword-relations)
 * [4. Validator and Transformer Keywords](#4-validator-and-transformer-keywords)
   + [4.1 hasHeader](#41-hasheader)
-  + [4.2 Header](#42-header)
+  + [4.2 header](#42-header)
   + [4.3 fields](#43-fields)
     - [4.3.1 Keywords for Any Type](#431-keywords-for-any-type)
       * [4.3.1.1 name](#4311-name)
@@ -38,11 +38,11 @@
       * [4.3.4.4 minimum](#4344-minimum)
       * [4.3.4.5 exclusiveMinimum](#4345-exclusiveminimum)
       * [4.3.4.6 multipleOf](#4346-multipleof)
-  + [4.2 missingValues](#42-missingvalues)
-  + [4.3 exactFields](#43-exactfields)
-  + [4.4 dependencies](#44-dependencies)
-  + [4.5 patternFields](#45-patternfields)
-  + [4.6 additionalFields](#46-additionalfields)
+  + [4.4 missingValues](#42-missingvalues)
+  + [4.5 exactFields](#43-exactfields)
+  + [4.6 dependencies](#44-dependencies)
+  + [4.7 patternFields](#45-patternfields)
+  + [4.8 additionalFields](#46-additionalfields)
 * [5. definitions and $ref](#5-definitions-and-ref)
 * [6. Annotator Keywords](#6-annotator-keywords)
   + [6.1 title and description](#61-title-and-description)
@@ -248,7 +248,7 @@ The value of this keyword MUST be a number, strictly greater than 0.
 
 A number of integer value is valid if it is multiple of "multipleOf".
 
-### 4.2 missingValues
+### 4.4 missingValues
 
 The value of this keyword MUST be an array of strings, which represents the strings that need to be treated as null value in the whole CSV data.
 
@@ -256,7 +256,7 @@ Implementation SHOULD process the keyword "missingValues" before keyword "fields
 
 The default value is `['']`. 
 
-### 4.3 exactFields
+### 4.5 exactFields
 
 The value of this keyword MUST be a boolean, which indicates if every field schema defined under "fields" matches correspond field in CSV data by order exactly.
 
@@ -264,7 +264,7 @@ If this keyword has boolean value false, any CSV data is valid. If this keyword 
 
 The default valus is `false`.
 
-### 4.4 dependencies
+### 4.6 dependencies
 
 The value of this keyword MUST be a JSON object.
 
@@ -274,7 +274,7 @@ The dependencies value MUST be an array. Each element in the array MUST be a str
 
 If the dependencies key exists in CSV data field names, each element in the dependencies value must exists in CSV data field names.
 
-### 4.5 patternFields
+### 4.7 patternFields
 
 Keyword "patternFields" provides a way to match multiple fields in CSV data with single field schema.
 
@@ -301,7 +301,7 @@ Example schema:
 
 In this example, it defines a string type field schema with regex ".*_name$". This field schema will be applied to all field names ending with "_name".
 
-### 4.6 additionalFields
+### 4.8 additionalFields
 
 The value of this keyword MUST be a boolean, which indicates whether allowing any field in CSV data that is not defined in this schema.
 
