@@ -334,7 +334,7 @@ In this example, it defines a string type field schema with author name "email_f
 
 ### 6.1 title and description
 
-Keyword "title" and "description" can be added to both of root schema or field schema. The value of these two keywords MUST be a string.
+Keyword "title" and "description" can be added to root schema, field schema or definitions. The value of these two keywords MUST be a string.
 
 These two keywords provide human readable information about the CSV document or field. "title" is usually a short text or label. "description" usually contains explanation about the document or field in detail.
 

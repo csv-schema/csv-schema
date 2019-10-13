@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "CSV Schema",
+  "title": "CSV Schema Meta Schema",
   "description": "This is meta-schema of CSV Schema.",
   "type": "object",
   "definitions": {
@@ -13,9 +13,21 @@
       "type": "integer",
       "minimum": 0
     },
+    "title": {
+      "description": "Title of the CSV file or field.",
+      "type": "string"
+    },
+    "description": {
+      "description": "Description of the CSV file or field.",
+      "type": "string"
+    },
     "fields-name": {
       "description": "Name of the field.",
       "type": "string"
+    },
+    "fields-examples": {
+      "description": "Examples of the field.",
+      "type": "array"
     },
     "fields-required": {
       "description": "Whether this field is required.",
@@ -197,6 +209,15 @@
       "title": "String Type Field",
       "description": "The string type field for `definitions` and `patternFields`. Similar to fields-type-string but it does not have `name` keyword.",
       "properties": {
+        "title": {
+          "$ref": "#/definitions/title"
+        },
+        "description": {
+          "$ref": "#/definitions/description"
+        },
+        "examples": {
+          "$ref": "#/definitions/fields-examples"
+        },
         "type": {
           "$ref": "#/definitions/fields-type-string"
         },
@@ -235,6 +256,15 @@
         "type"
       ],
       "properties": {
+        "title": {
+          "$ref": "#/definitions/title"
+        },
+        "description": {
+          "$ref": "#/definitions/description"
+        },
+        "examples": {
+          "$ref": "#/definitions/fields-examples"
+        },
         "type": {
           "$ref": "#/definitions/fields-type-boolean"
         },
@@ -261,6 +291,15 @@
         "type"
       ],
       "properties": {
+        "title": {
+          "$ref": "#/definitions/title"
+        },
+        "description": {
+          "$ref": "#/definitions/description"
+        },
+        "examples": {
+          "$ref": "#/definitions/fields-examples"
+        },
         "type": {
           "$ref": "#/definitions/fields-type-number"
         },
@@ -302,8 +341,14 @@
         "type"
       ],
       "properties": {
-        "name": {
-          "$ref": "#/definitions/fields-name"
+        "title": {
+          "$ref": "#/definitions/title"
+        },
+        "description": {
+          "$ref": "#/definitions/description"
+        },
+        "examples": {
+          "$ref": "#/definitions/fields-examples"
         },
         "type": {
           "$ref": "#/definitions/fields-type-number"
@@ -347,6 +392,15 @@
       ],
       "additionalProperties": false,
       "properties": {
+        "title": {
+          "$ref": "#/definitions/title"
+        },
+        "description": {
+          "$ref": "#/definitions/description"
+        },
+        "examples": {
+          "$ref": "#/definitions/fields-examples"
+        },
         "$ref": {
           "type": "string",
           "minLength": 1
@@ -370,6 +424,15 @@
             "properties": {
               "name": {
                 "$ref": "#/definitions/fields-name"
+              },
+              "title": {
+                "$ref": "#/definitions/title"
+              },
+              "description": {
+                "$ref": "#/definitions/description"
+              },
+              "examples": {
+                "$ref": "#/definitions/fields-examples"
               },
               "type": {
                 "$ref": "#/definitions/fields-type-string"
@@ -413,6 +476,15 @@
               "name": {
                 "$ref": "#/definitions/fields-name"
               },
+              "title": {
+                "$ref": "#/definitions/title"
+              },
+              "description": {
+                "$ref": "#/definitions/description"
+              },
+              "examples": {
+                "$ref": "#/definitions/fields-examples"
+              },
               "type": {
                 "$ref": "#/definitions/fields-type-boolean"
               },
@@ -445,6 +517,15 @@
             "properties": {
               "name": {
                 "$ref": "#/definitions/fields-name"
+              },
+              "title": {
+                "$ref": "#/definitions/title"
+              },
+              "description": {
+                "$ref": "#/definitions/description"
+              },
+              "examples": {
+                "$ref": "#/definitions/fields-examples"
               },
               "type": {
                 "$ref": "#/definitions/fields-type-number"
@@ -490,6 +571,15 @@
             "properties": {
               "name": {
                 "$ref": "#/definitions/fields-name"
+              },
+              "title": {
+                "$ref": "#/definitions/title"
+              },
+              "description": {
+                "$ref": "#/definitions/description"
+              },
+              "examples": {
+                "$ref": "#/definitions/fields-examples"
               },
               "type": {
                 "$ref": "#/definitions/fields-type-number"
@@ -537,6 +627,15 @@
               "name": {
                 "type": "string",
                 "minLength": 1
+              },
+              "title": {
+                "$ref": "#/definitions/title"
+              },
+              "description": {
+                "$ref": "#/definitions/description"
+              },
+              "examples": {
+                "$ref": "#/definitions/fields-examples"
               },
               "$ref": {
                 "type": "string",
@@ -587,6 +686,40 @@
       "description": "Use the fields defined in fields as required columns, including the order.",
       "default": false
     },
+    "$schema": {
+      "format": "uri",
+      "description": "URI of meta CSV Schema"
+    },
+    "dialect": {
+      "type": "object",
+      "title": "CSV dialect",
+      "description": "Define the CSV dialect if it does not follow RFC 4180",
+      "properties": {
+        "delimiter": {
+          "type": "string",
+          "default": ",",
+          "minLength": 1,
+          "maxLength": 1
+        },
+        "doubleQuote": {
+          "type": "boolean",
+          "default": true
+        },
+        "lineTerminator": {
+          "type": "string",
+          "default": "\r\n"
+        },
+        "quoteChar": {
+          "type": "string",
+          "default": "\""
+        },
+        "skipInitialSpace": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
     "dependencies": {
       "description": "Define dependencies among fields.",
       "type": "object",
@@ -631,6 +764,12 @@
       "description": "Whether to allow column not defined in fields or patternFields exists.",
       "type": "boolean",
       "default": true
+    },
+    "title": {
+      "$ref": "#/definitions/title"
+    },
+    "description": {
+      "$ref": "#/definitions/description"
     }
   },
   "additionalProperties": false
